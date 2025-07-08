@@ -12,9 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Контроллер для выполнения P2P-переводов и получения истории переводов.
- */
+
 @RestController
 @RequestMapping("/api/transfer")
 public class TransferController {
@@ -30,12 +28,6 @@ public class TransferController {
         this.transferHistoryRepository = transferHistoryRepository;
     }
 
-    /**
-     * Выполняет перевод между двумя счётами по номеру.
-     *
-     * @param request объект Transfer, содержащий fromAccountNumber, toAccountNumber, amount, userId
-     * @return JSON-ответ с результатом
-     */
     @PostMapping
     public ResponseEntity<Map<String, Object>> transfer(@RequestBody Transfer request) {
         logger.info("Запрос перевода: from={} to={} amount={} userId={}",
@@ -68,12 +60,7 @@ public class TransferController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Возвращает список всех переводов пользователя.
-     *
-     * @param userId ID пользователя
-     * @return список переводов в JSON-формате
-     */
+
     @GetMapping("/history/{userId}")
     public ResponseEntity<?> getTransferHistory(@PathVariable int userId) {
         logger.info("Получение истории переводов: userId={}", userId);
@@ -84,9 +71,6 @@ public class TransferController {
         return ResponseEntity.ok(history);
     }
 
-    /**
-     * Унифицированный метод возврата JSON-ошибки.
-     */
     private ResponseEntity<Map<String, Object>> error(String message) {
         Map<String, Object> body = new HashMap<>();
         body.put("error", message);

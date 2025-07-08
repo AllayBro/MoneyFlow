@@ -39,7 +39,6 @@ public class AccountRepository {
         return rows > 0;
     }
 
-    // 🆕 Метод для поиска счёта по номеру
     public Account findByAccountNumber(String accountNumber) {
         List<Account> list = jdbc.query("SELECT * FROM accounts WHERE account_number = ?",
                 new Object[]{accountNumber},
@@ -54,7 +53,7 @@ public class AccountRepository {
         return list.isEmpty() ? null : list.get(0);
     }
 
-    // 🆕 Метод обновления баланса
+
     public void updateBalance(int accountId, double newBalance) {
         jdbc.update("UPDATE accounts SET balance = ? WHERE id = ?", newBalance, accountId);
     }

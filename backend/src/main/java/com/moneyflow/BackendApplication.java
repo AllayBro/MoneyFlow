@@ -12,7 +12,6 @@ public class BackendApplication {
         SpringApplication.run(BackendApplication.class, args);
     }
 
-    // Разрешить фронтенду на порту 3000 обращаться к API
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {

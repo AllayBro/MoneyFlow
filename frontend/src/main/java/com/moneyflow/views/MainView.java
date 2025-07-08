@@ -22,7 +22,6 @@ public class MainView extends VerticalLayout implements BeforeEnterObserver {
     private final AccountGrid accountGrid = new AccountGrid();
 
     public MainView() {
-        // --- Общий стиль страницы ---
         setSizeFull();
         setPadding(false);
         setSpacing(false);
@@ -33,7 +32,6 @@ public class MainView extends VerticalLayout implements BeforeEnterObserver {
                 .set("gap", "0")
                 .set("box-sizing", "border-box");
 
-        // --- Получение пользователя ---
         String username = (String) VaadinSession.getCurrent().getAttribute("username");
         if (username == null) username = "Пользователь";
 
@@ -43,14 +41,13 @@ public class MainView extends VerticalLayout implements BeforeEnterObserver {
                 .set("font-weight", "700")
                 .set("color", "var(--lumo-primary-text-color)");
 
-        // --- Тема (тёмная по сохранению) ---
         Object darkAttr = VaadinSession.getCurrent().getAttribute("dark-theme");
         boolean isDark = darkAttr != null && (boolean) darkAttr;
         if (isDark) {
             UI.getCurrent().getElement().setAttribute("theme", "dark");
         }
 
-        Checkbox darkToggle = new Checkbox("🌙 Тёмная тема");
+        Checkbox darkToggle = new Checkbox("Тёмная тема");
         darkToggle.setValue(isDark);
         darkToggle.addValueChangeListener(event -> {
             boolean enabled = event.getValue();
@@ -58,7 +55,6 @@ public class MainView extends VerticalLayout implements BeforeEnterObserver {
             VaadinSession.getCurrent().setAttribute("dark-theme", enabled);
         });
 
-        // --- Кнопки ---
         Button historyButton = new Button("История переводов", e -> UI.getCurrent().navigate("history"));
         Button refreshButton = new Button("Обновить", e -> accountGrid.loadAccounts());
         Button logoutButton = new Button("Выйти", e -> {
@@ -70,7 +66,6 @@ public class MainView extends VerticalLayout implements BeforeEnterObserver {
         refreshButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         logoutButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        // --- Верхняя панель ---
         HorizontalLayout actionButtons = new HorizontalLayout(historyButton, refreshButton, logoutButton, darkToggle);
         actionButtons.setSpacing(true);
 
@@ -80,7 +75,6 @@ public class MainView extends VerticalLayout implements BeforeEnterObserver {
         topBar.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
         topBar.getStyle().set("padding", "1rem");
 
-        // --- Заголовок секции ---
         H2 sectionTitle = new H2("Ваши счета");
         sectionTitle.getStyle()
                 .set("margin-top", "1rem")
@@ -93,7 +87,6 @@ public class MainView extends VerticalLayout implements BeforeEnterObserver {
         transferForm.getStyle().set("margin-top", "1rem");
         createForm.getStyle().set("margin-top", "1rem");
 
-        // --- Сборка интерфейса ---
         add(topBar, sectionTitle, accountGrid, transferForm, createForm);
     }
 

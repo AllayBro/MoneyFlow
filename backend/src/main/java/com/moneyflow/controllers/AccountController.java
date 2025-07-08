@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Контроллер для управления банковскими счетами пользователя.
- */
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
@@ -24,9 +21,6 @@ public class AccountController {
         this.accountRepository = accountRepository;
     }
 
-    /**
-     * Получение всех счетов пользователя.
-     */
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Account>> getAccountsByUserId(@PathVariable int userId) {
         logger.info("Получен запрос на получение счетов пользователя ID={}", userId);
@@ -35,9 +29,6 @@ public class AccountController {
         return ResponseEntity.ok(accounts);
     }
 
-    /**
-     * Создание нового счёта.
-     */
     @PostMapping("/create")
     public ResponseEntity<String> createAccount(@RequestBody Map<String, Object> payload) {
         logger.info("Запрос на создание счёта: {}", payload);
@@ -65,9 +56,6 @@ public class AccountController {
         }
     }
 
-    /**
-     * Удаление счёта по ID.
-     */
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteAccount(@RequestParam int accountId) {
         logger.info("Запрос на удаление счёта ID={}", accountId);

@@ -27,7 +27,7 @@ public class AccountView extends VerticalLayout implements BeforeEnterObserver {
 
     private final Grid<JsonObject> grid = new Grid<>();
     private final NumberField balanceField = new NumberField("Начальный баланс");
-    private final TextField currencyField = new TextField("Валюта (например, USD)");
+    private final TextField currencyField = new TextField("Валюта (например, RUB)");
     private final TextField accountNumberField = new TextField("Лицевой счёт");
     private final Button addButton = new Button("Создать счёт");
 
@@ -76,7 +76,7 @@ public class AccountView extends VerticalLayout implements BeforeEnterObserver {
 
     private void configureForm() {
         balanceField.setPlaceholder("например: 1000.00");
-        currencyField.setPlaceholder("например: USD");
+        currencyField.setPlaceholder("например: RUB");
         accountNumberField.setPlaceholder("например: 1234567890");
 
         balanceField.setWidth("300px");
@@ -115,7 +115,7 @@ public class AccountView extends VerticalLayout implements BeforeEnterObserver {
                     }
                     grid.setItems(list);
                 } else {
-                    showNotification("Ошибка: получен неожиданный ответ");
+                    showNotification("Ошибка: получен очень странный ответ");
                 }
             }
         } catch (Exception ex) {

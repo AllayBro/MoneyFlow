@@ -5,9 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Модель для представления перевода и истории переводов.
- */
+
 public class Transfer {
 
     private int id;
@@ -16,8 +14,8 @@ public class Transfer {
     private double amount;
     private int userId;
     private Timestamp timestamp;
-    private String currency;         // ✅ добавлено
-    private String operationType;    // ✅ добавлено (входящий / исходящий / личный)
+    private String currency;
+    private String operationType;
 
     public Transfer() {}
 

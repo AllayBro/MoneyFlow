@@ -1,4 +1,3 @@
-// frontend/src/main/java/com/moneyflow/FrontendApplication.java
 package com.moneyflow;
 
 import org.springframework.boot.SpringApplication;

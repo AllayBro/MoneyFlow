@@ -34,7 +34,7 @@ public class GlobalExceptionHandlerTest {
     @Test
     void testHandleGenericException() {
         Exception ex = new Exception("Unexpected error");
-        ResponseEntity<?> response = handler.handleOther(ex, mockRequest); // ← исправлено имя метода
+        ResponseEntity<?> response = handler.handleOther(ex, mockRequest);
 
         assertEquals(500, response.getStatusCodeValue());
         assertNotNull(response.getBody());

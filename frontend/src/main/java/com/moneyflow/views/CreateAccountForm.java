@@ -18,10 +18,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-/**
- * Форма для создания нового счёта пользователя.
- */
 public class CreateAccountForm extends VerticalLayout {
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -46,15 +42,12 @@ public class CreateAccountForm extends VerticalLayout {
                 .set("margin-top", "1rem")
                 .set("box-shadow", "0 2px 8px rgba(0, 0, 0, 0.1)");
 
-        // Валюты ISO 4217
         for (Currency currency : Currency.getAvailableCurrencies()) {
             validCurrencyCodes.add(currency.getCurrencyCode());
         }
 
-        // Заголовок карточки
         H3 title = new H3("Создание нового счёта");
 
-        // Настройка полей
         balanceField.setPlaceholder("например: 1000.00");
         currencyField.setPlaceholder("например: USD");
         accountNumberField.setPlaceholder("например: 1234567890");
@@ -63,13 +56,11 @@ public class CreateAccountForm extends VerticalLayout {
         currencyField.setClearButtonVisible(true);
         accountNumberField.setClearButtonVisible(true);
 
-        // Кнопка
         createButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         createButton.setWidthFull();
         createButton.getStyle().set("margin-top", "1rem");
         createButton.addClickListener(e -> createAccount(accountGrid));
 
-        // Формат формы
         FormLayout form = new FormLayout();
         form.add(balanceField, currencyField, accountNumberField);
         form.setResponsiveSteps(
@@ -81,9 +72,6 @@ public class CreateAccountForm extends VerticalLayout {
         add(title, form, createButton);
     }
 
-    /**
-     * Отправляет запрос на создание счёта.
-     */
     private void createAccount(AccountGrid accountGrid) {
         Integer userId = (Integer) VaadinSession.getCurrent().getAttribute("userId");
 

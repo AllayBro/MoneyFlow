@@ -56,7 +56,6 @@ public class AccountControllerTest {
                 "accountNumber", "ACC789"
         );
 
-        // Метод createAccount не возвращает ничего, но может выбросить исключение
         doNothing().when(accountRepository).createAccount(
                 1,
                 1000.0,

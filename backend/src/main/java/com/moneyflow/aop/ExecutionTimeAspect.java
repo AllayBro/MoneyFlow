@@ -7,18 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-/**
- * AOP-аспект для замера времени выполнения публичных методов.
- */
 @Aspect
 @Component
 public class ExecutionTimeAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(ExecutionTimeAspect.class);
-
-    /**
-     * Логирует время выполнения всех публичных методов в com.moneyflow и подпакетах.
-     */
     @Around("execution(public * com.moneyflow..*(..))")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.nanoTime();

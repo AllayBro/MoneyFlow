@@ -15,9 +15,6 @@ public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    /**
-     * Обработка бизнес-ошибок и валидации.
-     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex,
                                                                      HttpServletRequest request) {
@@ -25,9 +22,6 @@ public class GlobalExceptionHandler {
         return jsonError(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    /**
-     * Ошибки, брошенные RestTemplate (вызов внешних API).
-     */
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<Map<String, Object>> handleHttpClientError(HttpClientErrorException ex,
                                                                      HttpServletRequest request) {
@@ -35,9 +29,6 @@ public class GlobalExceptionHandler {
         return jsonError(ex.getStatusCode(), ex.getResponseBodyAsString());
     }
 
-    /**
-     * Обработка всех остальных исключений.
-     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleOther(Exception ex,
                                                            HttpServletRequest request) {
@@ -45,9 +36,6 @@ public class GlobalExceptionHandler {
         return jsonError(HttpStatus.INTERNAL_SERVER_ERROR, "Внутренняя ошибка сервера. Повторите позже.");
     }
 
-    /**
-     * Возвращает JSON с ошибкой.
-     */
     private ResponseEntity<Map<String, Object>> jsonError(HttpStatus status, String message) {
         return ResponseEntity
                 .status(status)

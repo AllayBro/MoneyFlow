@@ -55,8 +55,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Vaadin production frontend build -->
             <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
@@ -73,7 +71,6 @@
             </plugin>
         </plugins>
     </build>
-
     <profiles>
         <profile>
             <id>production</id>

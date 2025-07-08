@@ -11,9 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Контроллер для аутентификации и регистрации пользователей.
- */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -25,9 +22,6 @@ public class AuthController {
         this.userRepo = userRepo;
     }
 
-    /**
-     * Вход пользователя по логину и паролю.
-     */
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody User input) {
         logger.info("Попытка входа пользователя: {}", input.getUsername());
@@ -53,9 +47,6 @@ public class AuthController {
         return ResponseEntity.ok(result);
     }
 
-    /**
-     * Регистрация нового пользователя.
-     */
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@RequestBody User input) {
         logger.info("Регистрация пользователя: {}", input.getUsername());
@@ -78,9 +69,6 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Унифицированный метод возврата JSON-ошибки.
-     */
     private ResponseEntity<Map<String, Object>> error(String message) {
         Map<String, Object> body = new HashMap<>();
         body.put("error", message);

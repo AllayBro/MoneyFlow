@@ -23,9 +23,6 @@ public class TransferService {
         this.transferHistoryRepository = transferHistoryRepository;
     }
 
-    /**
-     * Основная логика перевода между счётами.
-     */
     @Transactional
     public void transferByAccountNumbers(String fromAccountNumber, String toAccountNumber, double amount, int userId) {
         long start = System.currentTimeMillis();
@@ -49,7 +46,7 @@ public class TransferService {
         transferHistoryRepository.save(transfer);
 
         long time = System.currentTimeMillis() - start;
-        logger.info("✅ Перевод выполнен: {} → {} на сумму {} {} за {} мс",
+        logger.info("Перевод выполнен: {} → {} на сумму {} {} за {} мс",
                 fromAccountNumber, toAccountNumber, amount, from.getCurrency(), time);
     }
 

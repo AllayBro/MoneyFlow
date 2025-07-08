@@ -20,9 +20,6 @@ public class TransferHistoryRepository {
         this.jdbc = jdbc;
     }
 
-    /**
-     * Сохраняет перевод между двумя счетами по их accountNumber, включая валюту.
-     */
     public void save(Transfer transfer) {
         String sql = """
             INSERT INTO transfers (from_account_number, to_account_number, amount, user_id, timestamp, currency)
@@ -38,7 +35,7 @@ public class TransferHistoryRepository {
                 transfer.getCurrency()
         );
 
-        logger.info("✅ Сохранён перевод {} -> {} {} {}",
+        logger.info("Сохранён перевод {} -> {} {} {}",
                 transfer.getFromAccountNumber(),
                 transfer.getToAccountNumber(),
                 transfer.getAmount(),
@@ -46,9 +43,6 @@ public class TransferHistoryRepository {
         );
     }
 
-    /**
-     * Получает историю переводов для пользователя по userId (и входящие, и исходящие).
-     */
     public List<Transfer> findByUserId(int userId) {
         String sql = """
             SELECT t.id, t.from_account_number, t.to_account_number,

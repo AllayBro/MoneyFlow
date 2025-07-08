@@ -11,9 +11,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * Форма для перевода денег с одного счёта на другой по лицевым счётам.
- */
 public class TransferForm extends VerticalLayout {
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -36,7 +33,6 @@ public class TransferForm extends VerticalLayout {
                 .set("margin-top", "1rem")
                 .set("box-shadow", "0 2px 8px rgba(0, 0, 0, 0.1)");
 
-        // Заголовок блока
         H3 title = new H3("Перевод между счетами");
 
         // Настройка полей
@@ -48,12 +44,10 @@ public class TransferForm extends VerticalLayout {
         toField.setClearButtonVisible(true);
         amountField.setClearButtonVisible(true);
 
-        // Стили кнопки
         transferButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         transferButton.setWidthFull();
         transferButton.getStyle().set("margin-top", "1rem");
 
-        // Макет формы
         FormLayout form = new FormLayout();
         form.add(fromField, toField, amountField);
         form.setResponsiveSteps(
@@ -66,9 +60,6 @@ public class TransferForm extends VerticalLayout {
         transferButton.addClickListener(e -> transfer(accountGrid));
     }
 
-    /**
-     * Отправляет запрос на сервер для перевода средств.
-     */
     private void transfer(AccountGrid accountGrid) {
         String from = fromField.getValue();
         String to = toField.getValue();

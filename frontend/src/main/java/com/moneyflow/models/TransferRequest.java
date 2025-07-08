@@ -1,9 +1,4 @@
 package com.moneyflow.models;
-
-/**
- * DTO для передачи данных о переводе денег между счётами по лицевым номерам.
- * Используется в JSON-запросах от клиента к серверу.
- */
 public class TransferRequest {
 
     private String fromAccountNumber;
@@ -11,9 +6,7 @@ public class TransferRequest {
     private double amount;
     private int userId;
 
-    public TransferRequest() {
-        // Пустой конструктор нужен для JSON-десериализации
-    }
+    public TransferRequest() {   }
 
     public TransferRequest(String fromAccountNumber, String toAccountNumber, double amount, int userId) {
         this.fromAccountNumber = fromAccountNumber;
