@@ -1,0 +1,4 @@
+/* styles.css */
+:host {
+    color: var(--lumo-body-text-color);
+}

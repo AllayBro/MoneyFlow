@@ -1,0 +1,16 @@
+{
+  "frontendFolder": "C:/Users/AllayBro/ProjectJava/frontend/./frontend",
+  "themeFolder": "themes",
+  "themeResourceFolder": "C:/Users/AllayBro/ProjectJava/frontend/./frontend/generated/jar-resources",
+  "staticOutput": "C:/Users/AllayBro/ProjectJava/frontend/target/classes/META-INF/VAADIN/webapp/VAADIN/static",
+  "generatedFolder": "generated",
+  "statsOutput": "C:\\Users\\AllayBro\\ProjectJava\\frontend\\target\\classes\\META-INF\\VAADIN\\config",
+  "frontendBundleOutput": "C:\\Users\\AllayBro\\ProjectJava\\frontend\\target\\classes\\META-INF\\VAADIN\\webapp",
+  "jarResourcesFolder": "C:/Users/AllayBro/ProjectJava/frontend/./frontend/generated/jar-resources",
+  "generatedFlowImportsFolder": "target/frontend",
+  "themeName": "moneyflow",
+  "clientServiceWorkerSource": "C:\\Users\\AllayBro\\ProjectJava\\frontend\\target\\sw.ts",
+  "pwaEnabled": false,
+  "offlineEnabled": false,
+  "offlinePath": "'offline.html'"
+}

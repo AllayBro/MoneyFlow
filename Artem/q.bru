@@ -1,0 +1,22 @@
+meta {
+  name: q
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:3001/auth/reset-password-direct
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Typ: application/json
+}
+
+body:json {
+  {
+    "email": "idzhiron@bk.ru",
+    "newPassword": "Zotov2001"
+  }
+}

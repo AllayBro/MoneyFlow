@@ -1,0 +1,15 @@
+com\moneyflow\repositories\TransferHistoryRepository.class
+com\moneyflow\controllers\TransferController.class
+com\moneyflow\controllers\AccountController.class
+com\moneyflow\controllers\AuthController.class
+com\moneyflow\exceptions\GlobalExceptionHandler.class
+com\moneyflow\repositories\UserRepository.class
+com\moneyflow\exceptions\GlobalExceptionHandler$ErrorResponse.class
+com\moneyflow\BackendApplication.class
+com\moneyflow\models\Transfer.class
+com\moneyflow\services\TransferService.class
+com\moneyflow\models\Account.class
+com\moneyflow\BackendApplication$1.class
+com\moneyflow\aop\ExecutionTimeAspect.class
+com\moneyflow\repositories\AccountRepository.class
+com\moneyflow\models\User.class

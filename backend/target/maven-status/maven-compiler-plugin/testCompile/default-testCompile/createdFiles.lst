@@ -1,0 +1,4 @@
+com\moneyflow\controllers\TransferControllerTest.class
+com\moneyflow\controllers\AuthControllerTest.class
+com\moneyflow\controllers\AccountControllerTest.class
+com\moneyflow\services\TransferServiceTest.class
