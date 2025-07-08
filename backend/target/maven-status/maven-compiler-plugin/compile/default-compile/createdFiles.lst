@@ -4,7 +4,6 @@ com\moneyflow\controllers\AccountController.class
 com\moneyflow\controllers\AuthController.class
 com\moneyflow\exceptions\GlobalExceptionHandler.class
 com\moneyflow\repositories\UserRepository.class
-com\moneyflow\exceptions\GlobalExceptionHandler$ErrorResponse.class
 com\moneyflow\BackendApplication.class
 com\moneyflow\models\Transfer.class
 com\moneyflow\services\TransferService.class

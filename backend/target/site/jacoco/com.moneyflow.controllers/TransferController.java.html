@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransferController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">com.moneyflow.controllers</a> &gt; <span class="el_source">TransferController.java</span></div><h1>TransferController.java</h1><pre class="source lang-java linenums">package com.moneyflow.controllers;
+
+import com.moneyflow.models.Transfer;
+import com.moneyflow.repositories.TransferHistoryRepository;
+import com.moneyflow.services.TransferService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Контроллер для выполнения P2P-переводов и получения истории переводов.
+ */
+@RestController
+@RequestMapping(&quot;/api/transfer&quot;)
+public class TransferController {
+
+<span class="fc" id="L22">    private static final Logger logger = LoggerFactory.getLogger(TransferController.class);</span>
+
+    private final TransferService transferService;
+    private final TransferHistoryRepository transferHistoryRepository;
+
+    public TransferController(TransferService transferService,
+<span class="fc" id="L28">                              TransferHistoryRepository transferHistoryRepository) {</span>
+<span class="fc" id="L29">        this.transferService = transferService;</span>
+<span class="fc" id="L30">        this.transferHistoryRepository = transferHistoryRepository;</span>
+<span class="fc" id="L31">    }</span>
+
+    /**
+     * Выполняет перевод между двумя счётами по номеру.
+     *
+     * @param request объект Transfer, содержащий fromAccountNumber, toAccountNumber, amount, userId
+     * @return JSON-ответ с результатом
+     */
+    @PostMapping
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; transfer(@RequestBody Transfer request) {
+<span class="fc" id="L41">        logger.info(&quot;Запрос перевода: from={} to={} amount={} userId={}&quot;,</span>
+<span class="fc" id="L42">                request.getFromAccountNumber(),</span>
+<span class="fc" id="L43">                request.getToAccountNumber(),</span>
+<span class="fc" id="L44">                request.getAmount(),</span>
+<span class="fc" id="L45">                request.getUserId());</span>
+
+        // Простая валидация
+<span class="pc bpc" id="L48" title="3 of 6 branches missed.">        if (request.getFromAccountNumber() == null || request.getToAccountNumber() == null || request.getAmount() &lt;= 0) {</span>
+<span class="nc" id="L49">            return error(&quot;Некорректные данные перевода&quot;);</span>
+        }
+
+        try {
+<span class="fc" id="L53">            transferService.transferByAccountNumbers(</span>
+<span class="fc" id="L54">                    request.getFromAccountNumber(),</span>
+<span class="fc" id="L55">                    request.getToAccountNumber(),</span>
+<span class="fc" id="L56">                    request.getAmount(),</span>
+<span class="fc" id="L57">                    request.getUserId()</span>
+            );
+<span class="fc" id="L59">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L60">            logger.warn(&quot;Ошибка перевода: {}&quot;, e.getMessage());</span>
+<span class="fc" id="L61">            return error(e.getMessage());</span>
+<span class="fc" id="L62">        }</span>
+
+<span class="fc" id="L64">        logger.info(&quot;Перевод успешно выполнен для userId={}&quot;, request.getUserId());</span>
+
+<span class="fc" id="L66">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L67">        response.put(&quot;message&quot;, &quot;Перевод выполнен&quot;);</span>
+<span class="fc" id="L68">        return ResponseEntity.ok(response);</span>
+    }
+
+    /**
+     * Возвращает список всех переводов пользователя.
+     *
+     * @param userId ID пользователя
+     * @return список переводов в JSON-формате
+     */
+    @GetMapping(&quot;/history/{userId}&quot;)
+    public ResponseEntity&lt;?&gt; getTransferHistory(@PathVariable int userId) {
+<span class="fc" id="L79">        logger.info(&quot;Получение истории переводов: userId={}&quot;, userId);</span>
+
+<span class="fc" id="L81">        List&lt;Transfer&gt; history = transferHistoryRepository.findByUserId(userId);</span>
+
+<span class="fc" id="L83">        logger.debug(&quot;История переводов: {} записей для userId={}&quot;, history.size(), userId);</span>
+<span class="fc" id="L84">        return ResponseEntity.ok(history);</span>
+    }
+
+    /**
+     * Унифицированный метод возврата JSON-ошибки.
+     */
+    private ResponseEntity&lt;Map&lt;String, Object&gt;&gt; error(String message) {
+<span class="fc" id="L91">        Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L92">        body.put(&quot;error&quot;, message);</span>
+<span class="fc" id="L93">        return ResponseEntity.badRequest().body(body);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

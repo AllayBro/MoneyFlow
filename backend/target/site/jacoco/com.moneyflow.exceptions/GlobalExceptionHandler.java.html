@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">com.moneyflow.exceptions</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package com.moneyflow.exceptions;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.util.Map;
+
+@ControllerAdvice
+<span class="fc" id="L14">public class GlobalExceptionHandler {</span>
+
+<span class="fc" id="L16">    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);</span>
+
+    /**
+     * Обработка бизнес-ошибок и валидации.
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleIllegalArgument(IllegalArgumentException ex,
+                                                                     HttpServletRequest request) {
+<span class="fc" id="L24">        logger.warn(&quot;Ошибка данных [{}]: {}&quot;, request.getRequestURI(), ex.getMessage());</span>
+<span class="fc" id="L25">        return jsonError(HttpStatus.BAD_REQUEST, ex.getMessage());</span>
+    }
+
+    /**
+     * Ошибки, брошенные RestTemplate (вызов внешних API).
+     */
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleHttpClientError(HttpClientErrorException ex,
+                                                                     HttpServletRequest request) {
+<span class="nc" id="L34">        logger.warn(&quot;HTTP ошибка от клиента [{}]: {} - {}&quot;, request.getRequestURI(), ex.getStatusCode(), ex.getResponseBodyAsString());</span>
+<span class="nc" id="L35">        return jsonError(ex.getStatusCode(), ex.getResponseBodyAsString());</span>
+    }
+
+    /**
+     * Обработка всех остальных исключений.
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleOther(Exception ex,
+                                                           HttpServletRequest request) {
+<span class="fc" id="L44">        logger.error(&quot;Внутренняя ошибка [{}]: {}&quot;, request.getRequestURI(), ex.getMessage(), ex);</span>
+<span class="fc" id="L45">        return jsonError(HttpStatus.INTERNAL_SERVER_ERROR, &quot;Внутренняя ошибка сервера. Повторите позже.&quot;);</span>
+    }
+
+    /**
+     * Возвращает JSON с ошибкой.
+     */
+    private ResponseEntity&lt;Map&lt;String, Object&gt;&gt; jsonError(HttpStatus status, String message) {
+<span class="fc" id="L52">        return ResponseEntity</span>
+<span class="fc" id="L53">                .status(status)</span>
+<span class="fc" id="L54">                .contentType(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L55">                .body(Map.of(</span>
+<span class="fc" id="L56">                        &quot;timestamp&quot;, LocalDateTime.now().toString(),</span>
+<span class="fc" id="L57">                        &quot;status&quot;, status.value(),</span>
+<span class="fc" id="L58">                        &quot;error&quot;, status.getReasonPhrase(),</span>
+                        &quot;message&quot;, message
+                ));
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

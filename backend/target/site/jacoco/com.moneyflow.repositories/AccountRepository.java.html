@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">com.moneyflow.repositories</a> &gt; <span class="el_source">AccountRepository.java</span></div><h1>AccountRepository.java</h1><pre class="source lang-java linenums">package com.moneyflow.repositories;
+
+import com.moneyflow.models.Account;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public class AccountRepository {
+    private final JdbcTemplate jdbc;
+
+<span class="fc" id="L13">    public AccountRepository(JdbcTemplate jdbc) {</span>
+<span class="fc" id="L14">        this.jdbc = jdbc;</span>
+<span class="fc" id="L15">    }</span>
+
+    public List&lt;Account&gt; findByUserId(int userId) {
+<span class="fc" id="L18">        return jdbc.query(&quot;SELECT * FROM accounts WHERE user_id = ?&quot;,</span>
+<span class="fc" id="L19">                new Object[]{userId},</span>
+<span class="nc" id="L20">                (rs, rowNum) -&gt; new Account(</span>
+<span class="nc" id="L21">                        rs.getInt(&quot;id&quot;),</span>
+<span class="nc" id="L22">                        rs.getInt(&quot;user_id&quot;),</span>
+<span class="nc" id="L23">                        rs.getDouble(&quot;balance&quot;),</span>
+<span class="nc" id="L24">                        rs.getString(&quot;currency&quot;),</span>
+<span class="nc" id="L25">                        rs.getString(&quot;account_number&quot;)</span>
+                ));
+    }
+
+    public void createAccount(int userId, double initialBalance, String currency, String accountNumber) {
+<span class="fc" id="L30">        jdbc.update(</span>
+                &quot;INSERT INTO accounts (user_id, balance, currency, account_number) VALUES (?, ?, ?, ?)&quot;,
+<span class="fc" id="L32">                userId, initialBalance, currency, accountNumber</span>
+        );
+<span class="fc" id="L34">    }</span>
+
+    public boolean deleteAccountById(int accountId) {
+<span class="fc" id="L37">        String sql = &quot;DELETE FROM accounts WHERE id = ?&quot;;</span>
+<span class="fc" id="L38">        int rows = jdbc.update(sql, accountId);</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        return rows &gt; 0;</span>
+    }
+
+    // 🆕 Метод для поиска счёта по номеру
+    public Account findByAccountNumber(String accountNumber) {
+<span class="fc" id="L44">        List&lt;Account&gt; list = jdbc.query(&quot;SELECT * FROM accounts WHERE account_number = ?&quot;,</span>
+                new Object[]{accountNumber},
+<span class="nc" id="L46">                (rs, rowNum) -&gt; new Account(</span>
+<span class="nc" id="L47">                        rs.getInt(&quot;id&quot;),</span>
+<span class="nc" id="L48">                        rs.getInt(&quot;user_id&quot;),</span>
+<span class="nc" id="L49">                        rs.getDouble(&quot;balance&quot;),</span>
+<span class="nc" id="L50">                        rs.getString(&quot;currency&quot;),</span>
+<span class="nc" id="L51">                        rs.getString(&quot;account_number&quot;)</span>
+                ));
+
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        return list.isEmpty() ? null : list.get(0);</span>
+    }
+
+    // 🆕 Метод обновления баланса
+    public void updateBalance(int accountId, double newBalance) {
+<span class="fc" id="L59">        jdbc.update(&quot;UPDATE accounts SET balance = ? WHERE id = ?&quot;, newBalance, accountId);</span>
+<span class="fc" id="L60">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

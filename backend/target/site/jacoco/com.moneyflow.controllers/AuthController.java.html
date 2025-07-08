@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">com.moneyflow.controllers</a> &gt; <span class="el_source">AuthController.java</span></div><h1>AuthController.java</h1><pre class="source lang-java linenums">package com.moneyflow.controllers;
+
+import com.moneyflow.models.User;
+import com.moneyflow.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * Контроллер для аутентификации и регистрации пользователей.
+ */
+@RestController
+@RequestMapping(&quot;/api/auth&quot;)
+public class AuthController {
+
+<span class="fc" id="L21">    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);</span>
+    private final UserRepository userRepo;
+
+<span class="fc" id="L24">    public AuthController(UserRepository userRepo) {</span>
+<span class="fc" id="L25">        this.userRepo = userRepo;</span>
+<span class="fc" id="L26">    }</span>
+
+    /**
+     * Вход пользователя по логину и паролю.
+     */
+    @PostMapping(&quot;/login&quot;)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; login(@RequestBody User input) {
+<span class="fc" id="L33">        logger.info(&quot;Попытка входа пользователя: {}&quot;, input.getUsername());</span>
+
+<span class="pc bpc" id="L35" title="2 of 4 branches missed.">        if (input.getUsername() == null || input.getPassword() == null) {</span>
+<span class="nc" id="L36">            return error(&quot;Username и password обязательны&quot;);</span>
+        }
+
+<span class="fc" id="L39">        Optional&lt;User&gt; userOptional = userRepo.findByUsername(input.getUsername());</span>
+
+<span class="pc bpc" id="L41" title="1 of 4 branches missed.">        if (userOptional.isEmpty() || !userOptional.get().getPassword().equals(input.getPassword())) {</span>
+<span class="fc" id="L42">            return error(&quot;Неверное имя пользователя или пароль&quot;);</span>
+        }
+
+<span class="fc" id="L45">        User user = userOptional.get();</span>
+
+<span class="fc" id="L47">        Map&lt;String, Object&gt; result = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L48">        result.put(&quot;id&quot;, user.getId());</span>
+<span class="fc" id="L49">        result.put(&quot;username&quot;, user.getUsername());</span>
+<span class="fc" id="L50">        result.put(&quot;message&quot;, &quot;LoggedIn&quot;);</span>
+
+<span class="fc" id="L52">        logger.info(&quot;Успешный вход пользователя: {}&quot;, user.getUsername());</span>
+<span class="fc" id="L53">        return ResponseEntity.ok(result);</span>
+    }
+
+    /**
+     * Регистрация нового пользователя.
+     */
+    @PostMapping(&quot;/register&quot;)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; register(@RequestBody User input) {
+<span class="fc" id="L61">        logger.info(&quot;Регистрация пользователя: {}&quot;, input.getUsername());</span>
+
+<span class="pc bpc" id="L63" title="2 of 4 branches missed.">        if (input.getUsername() == null || input.getPassword() == null) {</span>
+<span class="nc" id="L64">            return error(&quot;Username и password обязательны&quot;);</span>
+        }
+
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (userRepo.findByUsername(input.getUsername()).isPresent()) {</span>
+<span class="fc" id="L68">            return error(&quot;Пользователь с таким именем уже существует&quot;);</span>
+        }
+
+<span class="fc" id="L71">        userRepo.save(input);</span>
+
+<span class="fc" id="L73">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L74">        response.put(&quot;message&quot;, &quot;Registered&quot;);</span>
+<span class="fc" id="L75">        response.put(&quot;username&quot;, input.getUsername());</span>
+
+<span class="fc" id="L77">        logger.info(&quot;Пользователь зарегистрирован: {}&quot;, input.getUsername());</span>
+<span class="fc" id="L78">        return ResponseEntity.ok(response);</span>
+    }
+
+    /**
+     * Унифицированный метод возврата JSON-ошибки.
+     */
+    private ResponseEntity&lt;Map&lt;String, Object&gt;&gt; error(String message) {
+<span class="fc" id="L85">        Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L86">        body.put(&quot;error&quot;, message);</span>
+<span class="fc" id="L87">        return ResponseEntity.badRequest().body(body);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

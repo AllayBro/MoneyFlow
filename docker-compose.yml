@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+
+  postgres:
+    image: postgres:14
+    restart: always
+    container_name: postgres
+    environment:
+      POSTGRES_DB: moneyflow_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Zotov2001
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - moneyflow
+
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/moneyflow_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Zotov2001
+    networks:
+      - moneyflow
+    dns:
+      - 8.8.8.8
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - moneyflow
+    dns:
+      - 8.8.8.8
+
+volumes:
+  pgdata:
+
+networks:
+  moneyflow:

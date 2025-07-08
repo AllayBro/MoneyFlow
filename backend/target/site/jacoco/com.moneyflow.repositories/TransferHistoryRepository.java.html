@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransferHistoryRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">com.moneyflow.repositories</a> &gt; <span class="el_source">TransferHistoryRepository.java</span></div><h1>TransferHistoryRepository.java</h1><pre class="source lang-java linenums">package com.moneyflow.repositories;
+
+import com.moneyflow.models.Transfer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import java.sql.Timestamp;
+import java.util.List;
+
+@Repository
+public class TransferHistoryRepository {
+
+<span class="fc" id="L15">    private static final Logger logger = LoggerFactory.getLogger(TransferHistoryRepository.class);</span>
+
+    private final JdbcTemplate jdbc;
+
+<span class="fc" id="L19">    public TransferHistoryRepository(JdbcTemplate jdbc) {</span>
+<span class="fc" id="L20">        this.jdbc = jdbc;</span>
+<span class="fc" id="L21">    }</span>
+
+    /**
+     * Сохраняет перевод между двумя счетами по их accountNumber, включая валюту.
+     */
+    public void save(Transfer transfer) {
+<span class="fc" id="L27">        String sql = &quot;&quot;&quot;</span>
+            INSERT INTO transfers (from_account_number, to_account_number, amount, user_id, timestamp, currency)
+            VALUES (?, ?, ?, ?, ?, ?)
+        &quot;&quot;&quot;;
+
+<span class="fc" id="L32">        jdbc.update(sql,</span>
+<span class="fc" id="L33">                transfer.getFromAccountNumber(),</span>
+<span class="fc" id="L34">                transfer.getToAccountNumber(),</span>
+<span class="fc" id="L35">                transfer.getAmount(),</span>
+<span class="fc" id="L36">                transfer.getUserId(),</span>
+<span class="fc" id="L37">                new Timestamp(System.currentTimeMillis()),</span>
+<span class="fc" id="L38">                transfer.getCurrency()</span>
+        );
+
+<span class="fc" id="L41">        logger.info(&quot;✅ Сохранён перевод {} -&gt; {} {} {}&quot;,</span>
+<span class="fc" id="L42">                transfer.getFromAccountNumber(),</span>
+<span class="fc" id="L43">                transfer.getToAccountNumber(),</span>
+<span class="fc" id="L44">                transfer.getAmount(),</span>
+<span class="fc" id="L45">                transfer.getCurrency()</span>
+        );
+<span class="fc" id="L47">    }</span>
+
+    /**
+     * Получает историю переводов для пользователя по userId (и входящие, и исходящие).
+     */
+    public List&lt;Transfer&gt; findByUserId(int userId) {
+<span class="fc" id="L53">        String sql = &quot;&quot;&quot;</span>
+            SELECT t.id, t.from_account_number, t.to_account_number,
+                   t.amount, t.user_id, t.timestamp, t.currency
+            FROM transfers t
+            WHERE t.from_account_number IN (
+                      SELECT account_number FROM accounts WHERE user_id = ?
+                  )
+               OR t.to_account_number IN (
+                      SELECT account_number FROM accounts WHERE user_id = ?
+                  )
+            ORDER BY t.timestamp DESC
+        &quot;&quot;&quot;;
+
+<span class="pc" id="L66">        return jdbc.query(sql, new Object[]{userId, userId}, (rs, rowNum) -&gt; new Transfer(</span>
+<span class="nc" id="L67">                rs.getInt(&quot;id&quot;),</span>
+<span class="nc" id="L68">                rs.getString(&quot;from_account_number&quot;),</span>
+<span class="nc" id="L69">                rs.getString(&quot;to_account_number&quot;),</span>
+<span class="nc" id="L70">                rs.getDouble(&quot;amount&quot;),</span>
+<span class="nc" id="L71">                rs.getInt(&quot;user_id&quot;),</span>
+<span class="nc" id="L72">                rs.getTimestamp(&quot;timestamp&quot;),</span>
+<span class="nc" id="L73">                rs.getString(&quot;currency&quot;)</span>
+        ));
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,4 +1,12 @@
+C:\Users\AllayBro\ProjectJava\backend\src\test\java\com\moneyflow\models\AccountModelTest.java
+C:\Users\AllayBro\ProjectJava\backend\src\test\java\com\moneyflow\repositories\TransferHistoryRepositoryTest.java
+C:\Users\AllayBro\ProjectJava\backend\src\test\java\com\moneyflow\repositories\AccountRepositoryTest.java
+C:\Users\AllayBro\ProjectJava\backend\src\test\java\com\moneyflow\repositories\UserRepositoryTest.java
+C:\Users\AllayBro\ProjectJava\backend\src\test\java\com\moneyflow\models\TransferModelTest.java
 C:\Users\AllayBro\ProjectJava\backend\src\test\java\com\moneyflow\services\TransferServiceTest.java
 C:\Users\AllayBro\ProjectJava\backend\src\test\java\com\moneyflow\controllers\AccountControllerTest.java
 C:\Users\AllayBro\ProjectJava\backend\src\test\java\com\moneyflow\controllers\AuthControllerTest.java
+C:\Users\AllayBro\ProjectJava\backend\src\test\java\com\moneyflow\models\UserModelTest.java
+C:\Users\AllayBro\ProjectJava\backend\src\test\java\com\moneyflow\aop\ExecutionTimeAspectTest.java
 C:\Users\AllayBro\ProjectJava\backend\src\test\java\com\moneyflow\controllers\TransferControllerTest.java
+C:\Users\AllayBro\ProjectJava\backend\src\test\java\com\moneyflow\exceptions\GlobalExceptionHandlerTest.java

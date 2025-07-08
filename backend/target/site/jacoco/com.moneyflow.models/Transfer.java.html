@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Transfer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">com.moneyflow.models</a> &gt; <span class="el_source">Transfer.java</span></div><h1>Transfer.java</h1><pre class="source lang-java linenums">package com.moneyflow.models;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
+/**
+ * Модель для представления перевода и истории переводов.
+ */
+public class Transfer {
+
+    private int id;
+    private String fromAccountNumber;
+    private String toAccountNumber;
+    private double amount;
+    private int userId;
+    private Timestamp timestamp;
+    private String currency;         // ✅ добавлено
+    private String operationType;    // ✅ добавлено (входящий / исходящий / личный)
+
+<span class="fc" id="L22">    public Transfer() {}</span>
+
+    // Полный конструктор
+<span class="fc" id="L25">    public Transfer(int id, String fromAccountNumber, String toAccountNumber, double amount, int userId, Timestamp timestamp, String currency) {</span>
+<span class="fc" id="L26">        this.id = id;</span>
+<span class="fc" id="L27">        this.fromAccountNumber = fromAccountNumber;</span>
+<span class="fc" id="L28">        this.toAccountNumber = toAccountNumber;</span>
+<span class="fc" id="L29">        this.amount = amount;</span>
+<span class="fc" id="L30">        this.userId = userId;</span>
+<span class="fc" id="L31">        this.timestamp = timestamp;</span>
+<span class="fc" id="L32">        this.currency = currency;</span>
+<span class="fc" id="L33">    }</span>
+
+    // Конструктор для создания нового перевода
+<span class="fc" id="L36">    public Transfer(String fromAccountNumber, String toAccountNumber, double amount, int userId, String currency) {</span>
+<span class="fc" id="L37">        this.fromAccountNumber = fromAccountNumber;</span>
+<span class="fc" id="L38">        this.toAccountNumber = toAccountNumber;</span>
+<span class="fc" id="L39">        this.amount = amount;</span>
+<span class="fc" id="L40">        this.userId = userId;</span>
+<span class="fc" id="L41">        this.currency = currency;</span>
+<span class="fc" id="L42">    }</span>
+
+    // Геттеры и сеттеры
+    public int getId() {
+<span class="fc" id="L46">        return id;</span>
+    }
+
+    public void setId(int id) {
+<span class="fc" id="L50">        this.id = id;</span>
+<span class="fc" id="L51">    }</span>
+
+    public String getFromAccountNumber() {
+<span class="fc" id="L54">        return fromAccountNumber;</span>
+    }
+
+    public void setFromAccountNumber(String fromAccountNumber) {
+<span class="fc" id="L58">        this.fromAccountNumber = fromAccountNumber;</span>
+<span class="fc" id="L59">    }</span>
+
+    public String getToAccountNumber() {
+<span class="fc" id="L62">        return toAccountNumber;</span>
+    }
+
+    public void setToAccountNumber(String toAccountNumber) {
+<span class="fc" id="L66">        this.toAccountNumber = toAccountNumber;</span>
+<span class="fc" id="L67">    }</span>
+
+    public double getAmount() {
+<span class="fc" id="L70">        return amount;</span>
+    }
+
+    public void setAmount(double amount) {
+<span class="fc" id="L74">        this.amount = amount;</span>
+<span class="fc" id="L75">    }</span>
+
+    public int getUserId() {
+<span class="fc" id="L78">        return userId;</span>
+    }
+
+    public void setUserId(int userId) {
+<span class="fc" id="L82">        this.userId = userId;</span>
+<span class="fc" id="L83">    }</span>
+
+    public Timestamp getTimestamp() {
+<span class="fc" id="L86">        return timestamp;</span>
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+<span class="fc" id="L90">        this.timestamp = timestamp;</span>
+<span class="fc" id="L91">    }</span>
+
+    public String getCurrency() {
+<span class="fc" id="L94">        return currency;</span>
+    }
+
+    public void setCurrency(String currency) {
+<span class="fc" id="L98">        this.currency = currency;</span>
+<span class="fc" id="L99">    }</span>
+
+    public String getOperationType() {
+<span class="fc" id="L102">        return operationType;</span>
+    }
+
+    public void setOperationType(String operationType) {
+<span class="fc" id="L106">        this.operationType = operationType;</span>
+<span class="fc" id="L107">    }</span>
+
+    public String getFormattedTimestamp() {
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (timestamp == null) return &quot;&quot;;</span>
+<span class="fc" id="L111">        LocalDateTime dateTime = timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();</span>
+<span class="fc" id="L112">        return dateTime.format(DateTimeFormatter.ofPattern(&quot;dd.MM.yyyy HH:mm:ss&quot;));</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L117">        return &quot;Transfer{&quot; +</span>
+                &quot;id=&quot; + id +
+                &quot;, fromAccountNumber='&quot; + fromAccountNumber + '\'' +
+                &quot;, toAccountNumber='&quot; + toAccountNumber + '\'' +
+                &quot;, amount=&quot; + amount +
+                &quot;, userId=&quot; + userId +
+                &quot;, timestamp=&quot; + timestamp +
+                &quot;, currency='&quot; + currency + '\'' +
+                &quot;, operationType='&quot; + operationType + '\'' +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

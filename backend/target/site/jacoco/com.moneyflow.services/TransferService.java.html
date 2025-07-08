@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransferService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend</a> &gt; <a href="index.source.html" class="el_package">com.moneyflow.services</a> &gt; <span class="el_source">TransferService.java</span></div><h1>TransferService.java</h1><pre class="source lang-java linenums">package com.moneyflow.services;
+
+import com.moneyflow.models.Account;
+import com.moneyflow.models.Transfer;
+import com.moneyflow.repositories.AccountRepository;
+import com.moneyflow.repositories.TransferHistoryRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class TransferService {
+
+<span class="fc" id="L15">    private static final Logger logger = LoggerFactory.getLogger(TransferService.class);</span>
+
+    private final AccountRepository accountRepository;
+    private final TransferHistoryRepository transferHistoryRepository;
+
+    public TransferService(AccountRepository accountRepository,
+<span class="fc" id="L21">                           TransferHistoryRepository transferHistoryRepository) {</span>
+<span class="fc" id="L22">        this.accountRepository = accountRepository;</span>
+<span class="fc" id="L23">        this.transferHistoryRepository = transferHistoryRepository;</span>
+<span class="fc" id="L24">    }</span>
+
+    /**
+     * Основная логика перевода между счётами.
+     */
+    @Transactional
+    public void transferByAccountNumbers(String fromAccountNumber, String toAccountNumber, double amount, int userId) {
+<span class="fc" id="L31">        long start = System.currentTimeMillis();</span>
+
+<span class="fc" id="L33">        validateInput(fromAccountNumber, toAccountNumber, amount);</span>
+
+<span class="fc" id="L35">        logger.info(&quot;Попытка перевода {} с {} на {} пользователем ID={}&quot;, amount, fromAccountNumber, toAccountNumber, userId);</span>
+
+<span class="fc" id="L37">        Account from = accountRepository.findByAccountNumber(fromAccountNumber);</span>
+<span class="fc" id="L38">        Account to = accountRepository.findByAccountNumber(toAccountNumber);</span>
+
+<span class="fc" id="L40">        validateAccounts(from, to, userId, fromAccountNumber, toAccountNumber, amount);</span>
+
+<span class="fc" id="L42">        double newFromBalance = from.getBalance() - amount;</span>
+<span class="fc" id="L43">        double newToBalance = to.getBalance() + amount;</span>
+
+<span class="fc" id="L45">        accountRepository.updateBalance(from.getId(), newFromBalance);</span>
+<span class="fc" id="L46">        accountRepository.updateBalance(to.getId(), newToBalance);</span>
+
+<span class="fc" id="L48">        Transfer transfer = new Transfer(fromAccountNumber, toAccountNumber, amount, userId, from.getCurrency());</span>
+<span class="fc" id="L49">        transferHistoryRepository.save(transfer);</span>
+
+<span class="fc" id="L51">        long time = System.currentTimeMillis() - start;</span>
+<span class="fc" id="L52">        logger.info(&quot;✅ Перевод выполнен: {} → {} на сумму {} {} за {} мс&quot;,</span>
+<span class="fc" id="L53">                fromAccountNumber, toAccountNumber, amount, from.getCurrency(), time);</span>
+<span class="fc" id="L54">    }</span>
+
+    private void validateInput(String from, String to, double amount) {
+<span class="pc bpc" id="L57" title="4 of 8 branches missed.">        if (from == null || to == null || from.isBlank() || to.isBlank()) {</span>
+<span class="nc" id="L58">            throw new IllegalArgumentException(&quot;Номера счетов не могут быть пустыми&quot;);</span>
+        }
+
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (from.equals(to)) {</span>
+<span class="fc" id="L62">            throw new IllegalArgumentException(&quot;Нельзя перевести на тот же самый счёт&quot;);</span>
+        }
+
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (amount &lt;= 0) {</span>
+<span class="nc" id="L66">            throw new IllegalArgumentException(&quot;Сумма перевода должна быть положительной&quot;);</span>
+        }
+<span class="fc" id="L68">    }</span>
+
+    private void validateAccounts(Account from, Account to, int userId,
+                                  String fromAccountNumber, String toAccountNumber, double amount) {
+<span class="pc bpc" id="L72" title="1 of 4 branches missed.">        if (from == null || to == null) {</span>
+<span class="fc" id="L73">            logger.warn(&quot;Не найден один из счетов: {} или {}&quot;, fromAccountNumber, toAccountNumber);</span>
+<span class="fc" id="L74">            throw new IllegalArgumentException(&quot;Один из указанных счетов не существует&quot;);</span>
+        }
+
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (from.getUserId() != userId) {</span>
+<span class="nc" id="L78">            logger.warn(&quot;Попытка перевода с чужого счёта {} пользователем ID={}&quot;, fromAccountNumber, userId);</span>
+<span class="nc" id="L79">            throw new IllegalArgumentException(&quot;Вы не владелец счёта отправителя&quot;);</span>
+        }
+
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">        if (!from.getCurrency().equals(to.getCurrency())) {</span>
+<span class="nc" id="L83">            logger.warn(&quot;Несовпадение валют: {} vs {}&quot;, from.getCurrency(), to.getCurrency());</span>
+<span class="nc" id="L84">            throw new IllegalArgumentException(&quot;Валюты счётов должны совпадать&quot;);</span>
+        }
+
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (from.getBalance() &lt; amount) {</span>
+<span class="fc" id="L88">            logger.warn(&quot;Недостаточно средств на счёте {}. Баланс: {}, требуется: {}&quot;, fromAccountNumber, from.getBalance(), amount);</span>
+<span class="fc" id="L89">            throw new IllegalArgumentException(&quot;Недостаточно средств на счёте&quot;);</span>
+        }
+<span class="fc" id="L91">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

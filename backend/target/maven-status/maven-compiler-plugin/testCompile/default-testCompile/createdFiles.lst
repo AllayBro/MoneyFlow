@@ -1,4 +1,12 @@
+com\moneyflow\repositories\TransferHistoryRepositoryTest.class
 com\moneyflow\controllers\TransferControllerTest.class
+com\moneyflow\models\UserModelTest.class
 com\moneyflow\controllers\AuthControllerTest.class
-com\moneyflow\controllers\AccountControllerTest.class
+com\moneyflow\exceptions\GlobalExceptionHandlerTest.class
+com\moneyflow\models\AccountModelTest.class
+com\moneyflow\repositories\UserRepositoryTest.class
 com\moneyflow\services\TransferServiceTest.class
+com\moneyflow\models\TransferModelTest.class
+com\moneyflow\aop\ExecutionTimeAspectTest.class
+com\moneyflow\controllers\AccountControllerTest.class
+com\moneyflow\repositories\AccountRepositoryTest.class

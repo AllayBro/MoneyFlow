@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -48,9 +47,9 @@ public class TransferControllerTest {
         mockMvc.perform(post("/api/transfer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
-                        .characterEncoding(StandardCharsets.UTF_8.name()))
+                        .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Перевод выполнен"));
+                .andExpect(jsonPath("$.message").value("Перевод выполнен"));
 
         Mockito.verify(transferService).transferByAccountNumbers("ACC1", "ACC2", 100.0, 1);
     }
@@ -64,16 +63,15 @@ public class TransferControllerTest {
         request.setCurrency("RUB");
         request.setUserId(1);
 
-        // симулируем бизнес-ошибку
         Mockito.doThrow(new IllegalArgumentException("Ошибка")).when(transferService)
                 .transferByAccountNumbers("ACC1", "ACC2", 100.0, 1);
 
         mockMvc.perform(post("/api/transfer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
-                        .characterEncoding(StandardCharsets.UTF_8.name()))
+                        .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("Ошибка")));
+                .andExpect(jsonPath("$.error").value("Ошибка"));
     }
 
     @Test
@@ -90,7 +88,7 @@ public class TransferControllerTest {
                 .thenReturn(List.of(t1));
 
         mockMvc.perform(get("/api/transfer/history/1")
-                        .characterEncoding(StandardCharsets.UTF_8.name()))
+                        .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].fromAccountNumber").value("A1"))
                 .andExpect(jsonPath("$[0].toAccountNumber").value("A2"))

@@ -67,8 +67,7 @@ public class AuthControllerTest {
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.error").value("Bad Request"))
-                .andExpect(jsonPath("$.message").value("Неверное имя пользователя или пароль"));
+                .andExpect(jsonPath("$.error").value("Неверное имя пользователя или пароль"));
     }
 
     @Test
@@ -105,6 +104,6 @@ public class AuthControllerTest {
                         .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message").value("Пользователь с таким именем уже существует"));
+                .andExpect(jsonPath("$.error").value("Пользователь с таким именем уже существует"));
     }
 }
